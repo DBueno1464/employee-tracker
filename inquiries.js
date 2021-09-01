@@ -14,4 +14,6 @@ inquirer.prompt([
             'update an employee role'
         ]
     }
-])
+]);
+
+module.exports = inquirer;

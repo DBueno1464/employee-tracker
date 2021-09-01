@@ -1,11 +1,12 @@
 const express = require('express');
 const mysql = require('mysql2');
-//const sequelize = require('./config/connections');
-const dotenv = require('dotenv');
 const cTable = require('console.table');
+// const inquirer = 
+
+const app = express();
 
 const PORT = process.env.PORT || 3001;
-const app = express();
+
 
 // Express middleware
 app.use(express.urlencoded({ extended: false }));
