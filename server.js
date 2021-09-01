@@ -1,7 +1,7 @@
+const inquirer = require('inquirer');
 const express = require('express');
 const mysql = require('mysql2');
 const cTable = require('console.table');
-// const inquirer = 
 
 const app = express();
 
@@ -29,6 +29,25 @@ app.use((req, res) => {
     res.status(404).end();
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+
+const promptUser = () =>{
+    return inquirer.prompt([
+    {
+        type: 'list',
+        name: 'Selections',
+        choices: [
+            'view all departments',
+            'view all roles',
+            'view all employees',
+            'add a department',
+            'add a role',
+            'add an employee',
+            'update an employee role'
+        ]
+    }
+]);
+};
+
+promptUser();
+
+app.listen(PORT, () => { });
