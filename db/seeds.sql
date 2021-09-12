@@ -16,8 +16,8 @@ select * from role;
 
 INSERT INTO employee ( first_name, last_name, role_id, manager_id )
 VALUES
-( 'Venus', 'Willendorf', 3, 1 ),
-( 'Maxxy', 'Tibby', 1, 2 ),
-( 'Amanda', 'Tutor', 2, 3);
+( 'Venus', 'Willendorf', 3, 2 ),
+( 'Maxxy', 'Tibby', 1, 3 ),
+( 'Amanda', 'Tutor', 2, 1);
 
 select * from employee;

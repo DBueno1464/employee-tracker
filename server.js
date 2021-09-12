@@ -193,7 +193,6 @@ const addRole = () => {
             var name = String(name);
             let salary = Number(answers.salary);
             var department = answers.department;
-            let randID = Math.floor(Math.random()*10) + 10;
 
             switch (department) {
                 case `sales`:
@@ -204,22 +203,17 @@ const addRole = () => {
                     break;
                 case `entertainment`:
                     department = 3;
-                    break;            
+                    break;
             }
-            console.log(name,salary,department);
+            console.log(name, salary, department);
 
-            let sqlEntry = `${randID}, '${name}', ${salary}, ${department}`;
-
-            console.log(sqlEntry);
-
-            let sql = `
-                INSERT INTO role
+            const sql = `
+                INSERT INTO role (title, salary, department_id)
                 VALUES
-                (${sqlEntry});
+                (?, ?, ?);
                 `;
 
-            db.query(sql, (err, res) => {
-
+            db.query(sql, [name, salary, department], (err, res) => {
                 promptUser();
             });
         })
@@ -230,8 +224,8 @@ const addRole = () => {
         })
 };
 
-const addEmp = () => { 
-    
+const addEmp = () => {
+
 
     console.log('Assesed addEmp function');
 
@@ -248,55 +242,80 @@ const addEmp = () => {
             message: "What is the employee's last name?"
         },
         {
-            type: 'input',
+            type: 'list',
             name: 'role',
-            message: "What is their role?"
+            message: "What is your role?",
+            choices: [
+                `sales person`,
+                `acountant`,
+                `funny person`
+            ]
         },
         {
-            type: 'input',
+            type: 'list',
             name: 'manager',
-            message: "What is the employee's manager?"
+            message: 'and who is your manager?',
+            choices: [
+                `Venus Willendorf`,
+                `Maxxy Tibby`,
+                `Amanda Tutor`,
+                `I do not have a manager`
+            ]
         }
     ])
         .then((answers) => {
 
-            let randID = Math.floor(Math.random()*10) + 10;
             var nameFirst = answers.firstname;
             var nameLast = answers.lastname;
             var role = answers.role;
-            let managerID = Number(answers.manager);
-            
-            console.log(randID, nameFirst, nameLast, role, managerID);
+            let managerID = answers.manager;
 
-            // switch (department) {
-            //     case `sales`:
-            //         department = 1;
-            //         break;
-            //     case `finance`:
-            //         department = 2;
-            //         break;
-            //     case `entertainment`:
-            //         department = 3;
-            //         break;            
-            // }
-            // console.log(name,salary,department);
+            console.log(nameFirst, nameLast, role, managerID);
 
-            
+            switch (managerID) {
+                case `Venus Willendorf`:
+                    managerID = 1;
+                    break;
+                case `Maxxy Tibby`:
+                    managerID = 2;
+                    break;
+                case `Amanda Tutor`:
+                    managerID = 3;
+                    break;
+                case `I do not have a manager`:
+                    managerID = null;
+            }
 
-            
+            switch (role) {
+                case `sales person`:
+                    role = 1;
+                    break;
+                case `acountant`:
+                    role = 2;
+                    break;
+                case `funny person`:
+                    role = 3;
+            }
 
-            
+            console.log(nameFirst, nameLast, role, managerID);
 
-            // db.query(sql, (err, res) => {
+            let sql = `
+            INSERT INTO employee ( first_name, last_name, role_id, manager_id )
+            VALUES
+            (?, ?, ?, ?);
+            `;
 
-            //     promptUser();
-            // });
+            db.query(sql, [nameFirst, nameLast, role, managerID], (err, res) => {
+
+                promptUser();
+            });
         })
         .catch((err) => {
             if (err) {
                 console.log(err);
             };
         });
+        
 
 };
 
