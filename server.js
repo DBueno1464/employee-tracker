@@ -106,7 +106,7 @@ const viewAllRoles = () => {
 
     console.log('Assesed viewAllRoles function');
 
-    let sql = `select * from role`;
+    let sql = `select role.id, role.title, role.salary, department.name FROM role INNER JOIN department ON role.department_id = department.id`
 
     db.query(sql, (err, res) => {
         console.table(res);
@@ -118,7 +118,14 @@ const viewAllEmps = () => {
 
     console.log('Assesed viewAllEmps function');
 
-    let sql = `select * from employee`;
+    let sql = `select employee.id, employee.first_name, employee.last_name, role.title, role.salary, department.name, employee.manager_id from employee 
+    
+    INNER JOIN role ON employee.role_id = role.id
+    
+    INNER JOIN department ON role.department_id = department.id
+
+    ORDER BY employee.id
+    `;
 
     db.query(sql, (err, res) => {
         console.table(res);
@@ -148,7 +155,7 @@ const addDept = () => {
                 `;
 
             db.query(sql, name, (err, res) => {
-
+                console.table(res);
                 promptUser();
             });
         })
@@ -214,6 +221,7 @@ const addRole = () => {
                 `;
 
             db.query(sql, [name, salary, department], (err, res) => {
+                console.table(res);
                 promptUser();
             });
         })
@@ -306,7 +314,8 @@ const addEmp = () => {
             `;
 
             db.query(sql, [nameFirst, nameLast, role, managerID], (err, res) => {
-
+                console.table(res); // function where I'll get res to use as a list
+          
                 promptUser();
             });
         })
@@ -319,7 +328,9 @@ const addEmp = () => {
 
 };
 
-const updateEmpRole = () => { };
+const updateEmpRole = () => { 
+    // select * from employees => take res and 
+};
 
 
 promptUser();
