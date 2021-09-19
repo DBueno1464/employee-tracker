@@ -80,7 +80,7 @@ const promptUser = () => {
                     break;
             }
 
-            console.log(answers);
+            // console.log(answers);
 
         })
         .catch((err) => {
@@ -305,7 +305,7 @@ const addEmp = () => {
                     role = 3;
             }
 
-            console.log(nameFirst, nameLast, role, managerID);
+            // console.log(nameFirst, nameLast, role, managerID);
 
             let sql = `
             INSERT INTO employee ( first_name, last_name, role_id, manager_id )
@@ -314,8 +314,9 @@ const addEmp = () => {
             `;
 
             db.query(sql, [nameFirst, nameLast, role, managerID], (err, res) => {
-                console.table(res); // function where I'll get res to use as a list
-          
+                console.table(res);
+                // function where I'll get res to use as a list
+
                 promptUser();
             });
         })
@@ -324,12 +325,80 @@ const addEmp = () => {
                 console.log(err);
             };
         });
-        
-
 };
 
-const updateEmpRole = () => { 
-    // select * from employees => take res and 
+const updateEmpRole = () => {
+    // select concat(first_name , ' ' , last_name) as full_name from employee => take res and use as a list
+    console.log('Assesed updateEmpRole function');
+
+    var id = [];
+    var names = [];
+
+    let sql = `select id ,concat(first_name , ' ' , last_name) as full_name from employee`;
+
+    db.query(sql, (err, res) => {
+
+        for (var i = 0; i < res.length; i++) {
+
+            id.push(res[i].id);
+            names.push(res[i].full_name);
+            
+        };
+        // console.log(id, names);
+        // console.table(res);
+
+        inquirer.prompt([
+            {
+                type: 'list',
+                name: 'fullnames',
+                message: 'Which employee would you like to update?',
+                choices: names
+            },
+            {
+                type: 'list',
+                name: 'newroles',
+                message: 'What will be their new role?',
+                choices: [
+                    `sales person`,
+                    `accountant`,
+                    `funny person`
+                ]
+            }
+        ])
+        .then((answers) => {
+            let fullName = answers.fullnames;
+            let newRole = answers.newroles;
+
+            let nameToID = names.indexOf(fullName) + 1;
+            console.log(nameToID);
+
+            switch(newRole) {
+                case 'sales person':
+                    newRole = 1;
+                    break;
+                case `accountant`:
+                    newRole = 2;
+                    break;
+                case 'funny person':
+                    newRole = 3;
+            }
+       
+            
+            let sql = `update employee set role_id = ? where id = ?`;
+
+            db.query(sql, [newRole, nameToID], (err, res) => {
+                db.query(`
+                select first_name, last_name, role.title from employee
+                
+                INNER JOIN role ON employee.role_id = role.id
+                
+                ORDER by employee.id
+                `, (err, res) => {
+                    console.table(res);
+                })
+            })
+        })
+    });
 };
 
 
