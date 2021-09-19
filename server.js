@@ -118,7 +118,7 @@ const viewAllEmps = () => {
 
     console.log('Assesed viewAllEmps function');
 
-    let sql = `select employee.id, employee.first_name, employee.last_name, role.title, role.salary, department.name, employee.manager_id from employee 
+    let sql = `select employee.id, employee.first_name, employee.last_name, role.title, role.salary, department.name from employee 
     
     INNER JOIN role ON employee.role_id = role.id
     
@@ -155,8 +155,11 @@ const addDept = () => {
                 `;
 
             db.query(sql, name, (err, res) => {
-                console.table(res);
-                promptUser();
+                let printTable = `select * from department`;
+                db.query(printTable, (err, res) => {
+                    console.table(res);
+                    promptUser();
+                })
             });
         })
         .catch((err) => {
@@ -212,7 +215,7 @@ const addRole = () => {
                     department = 3;
                     break;
             }
-            console.log(name, salary, department);
+            // console.log(name, salary, department);
 
             const sql = `
                 INSERT INTO role (title, salary, department_id)
@@ -221,8 +224,21 @@ const addRole = () => {
                 `;
 
             db.query(sql, [name, salary, department], (err, res) => {
-                console.table(res);
-                promptUser();
+
+                let printTable = `
+                select role.id, role.title, role.salary, department.name 
+                
+                from role
+                
+                INNER JOIN department on role.department_id = department.id
+                
+                Order by role.id
+                `;
+
+                db.query(printTable, (err, res) => {
+                    console.table(res);
+                    promptUser();
+                });
             });
         })
         .catch((err) => {
@@ -314,10 +330,23 @@ const addEmp = () => {
             `;
 
             db.query(sql, [nameFirst, nameLast, role, managerID], (err, res) => {
-                console.table(res);
-                // function where I'll get res to use as a list
 
-                promptUser();
+                let printTable = `
+                select employee.first_name, employee.last_name, role.title as role_title, role.salary, department.name as department_name
+
+                from employee
+
+                INNER JOIN role on employee.role_id = role.id
+
+                INNER JOIN department on role.department_id = department.id 
+
+                ORDER by employee.id
+                `;
+
+                db.query(printTable, (err, res) => {
+                    console.table(res);
+                    promptUser();
+                });
             });
         })
         .catch((err) => {
@@ -388,11 +417,14 @@ const updateEmpRole = () => {
 
             db.query(sql, [newRole, nameToID], (err, res) => {
                 db.query(`
-                select first_name, last_name, role.title from employee
+                select employee.first_name, employee.last_name, role.title as role_title, manager_id
+                
+                from employee
                 
                 INNER JOIN role ON employee.role_id = role.id
-                
+
                 ORDER by employee.id
+                
                 `, (err, res) => {
                     console.table(res);
                 })
