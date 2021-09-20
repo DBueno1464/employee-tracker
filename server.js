@@ -3,8 +3,6 @@ const express = require('express');
 const mysql = require('mysql2');
 const cTable = require('console.table');
 
-// const { viewAllDept } = require('./js/functions');
-
 const app = express();
 
 const PORT = process.env.PORT || 3001;
@@ -18,9 +16,9 @@ app.use(express.json());
 const db = mysql.createConnection(
     {
         host: 'localhost',
-        // MySQL username,
+        
         user: 'root',
-        // TODO: Add MySQL password here
+        
         password: 'cats',
         database: 'company_db'
     },
@@ -44,7 +42,8 @@ const promptUser = () => {
                 'add a department',
                 'add a role',
                 'add an employee',
-                'update an employee role'
+                'update an employee role',
+                `quit`
             ]
         }
     ])
